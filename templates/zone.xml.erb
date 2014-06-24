@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <zone>
+<%- unless @short.empty? -%>
   <short><%= @short %></short>
+<%- end -%>
+<%- unless @description.empty? -%>
   <description><%= @description %></description>
+<%- end -%>
+<% @interfaces.each do |interface| -%>
   <interface name="<%= @interface %>"/>
-  <source address="<%= @source %>"/>
+<% end -%>
+<% @sources.each do |source| -%>
+  <source name="<%= @source %>"/>
+<% end -%>
+<% @services.each do |service| -%>
   <service name="<%= @service %>"/>
-  <port protocol="<%= @protocol %>" port="<%= @port %>"/>
+<% end -%>
+<%- @ports.each do |comment, id_proto| -%>
+  <!-- <%= comment %> -->
+  <%- id_proto.each do |id, proto| -%>
+  <port port="<%= id %>" protocol="<%= proto %>"/>
+  <%- end -%>
+<%- end -%>
+<% @icmp_blocks.each do |icmp_block| -%>
   <icmp-block name="<%= @icmp_block %>"/>
+<% end -%>
+<%- if @masquerade == true -%>
   <masquerade/>
-  <forward-port to-addr="<%= @fw_to_addr %>" to-port="<%= @fw_to_port %>" protocol="<%= @fw_protocol %>" port="<%= @fw_to_port %>"/>
+<%- end -%>
+<%- @forward_ports.each do |fw_port| -%>
+  <!-- <%= fw_port['comment'] %> -->
+  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-port="<%= fw_port['to_port'] %>" to-addr="<%= fw_port['to_addr'] %>"/>
+<%- end -%>
 </zone>

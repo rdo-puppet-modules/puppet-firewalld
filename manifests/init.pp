@@ -129,10 +129,23 @@ class firewalld::zone::base {
 	}
 }
 
+#$forward_ports = [{
+#		comment		=>  'my forward to somewhere',
+#		portid		=> '123',
+#		protocol	=> 'tcp',
+#		to_port		=> '321',
+#		to_addr		=> '1.2.3.4',},],
+
 define firewalld::zone(
-	$ports = [],
-	$services = [],
-	$masquerade = false,
+	$short = "",			# short readable name
+	$description = "",		# long description of zone
+	$interfaces = [],		# bind an interfaces to a zone
+	$sources = [],			# bind a source address or source address range ("address/mask") to a zone
+	$ports = {},			# e.g. {"ssh port" => {"22" => "tcp"}}
+	$services = [],			# predefined firewalld services, e.g. ["ssh", "dhcpv6-client"]
+	$icmp_blocks = [],		# predefined icmp-types to block, e.g. ["echo-reply"]
+	$masquerade = false,		# enable masquerading ?
+	$forward_ports = [],		#
 ) {
 	include firewalld::zone::base
 
