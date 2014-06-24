@@ -1,0 +1,5 @@
+This is puppet-firewalld a puppet module for firewalld.
+
+Please read the INSTALL file for instructions on getting this installed.
+Look in the examples/ folder for usage.
+

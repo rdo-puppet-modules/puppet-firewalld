@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short><%= @short %></short>
+  <description><%= @description %></description>
+  <interface name="<%= @interface %>"/>
+  <source address="<%= @source %>"/>
+  <service name="<%= @service %>"/>
+  <port protocol="<%= @protocol %>" port="<%= @port %>"/>
+  <icmp-block name="<%= @icmp_block %>"/>
+  <masquerade/>
+  <forward-port to-addr="<%= @fw_to_addr %>" to-port="<%= @fw_to_port %>" protocol="<%= @fw_protocol %>" port="<%= @fw_to_port %>"/>
+</zone>

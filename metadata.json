@@ -1,0 +1,14 @@
+{
+  "name": "firewalld",
+  "version": "0.0.1",
+  "author": "Jiri Popelka <jpopelka@redhat.com>",
+  "summary": "Puppet Module for Firewalld",
+  "license": "GPLv2+",
+  "source": "https://github.com/jpopelka/puppet-firewalld.git",
+  "operatingsystem_support": [
+  ],
+  "requirements": [
+  ],
+  "dependencies": [
+  ]
+}
