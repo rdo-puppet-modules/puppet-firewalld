@@ -1,24 +1,28 @@
 # here is some example usage for some of the firewalld classes and types
 
 class {'firewalld::configuration':
-        default_zone    =>      'home',
-        minimal_mark    =>      '666',
+        default_zone    =>      'custom',
+        minimal_mark    =>      '200',
 }
 
 # define a zone
-$zone = 'public'	# use a variable
-firewalld::zone { "${zone}":
+firewalld::zone { "custom":
 	description	=> "This is an example zone",
 	services	=> ["ssh", "dhcpv6-client"],
-	ports 		=> {
-			"ssh" => {"22" => "tcp"},
-			"dhcpv6 client" => {"546" => "udp"},
-			"additional" => {"1025-65535" => "tcp"}},
+	ports		=> [{
+			comment		=> "open port for ssh",
+			port		=> "22",
+			protocol	=> "tcp",},
+			{
+			comment		=> "also for dhcpv6-client",
+			port		=> "546",
+			protocol	=> "udp",}],
 	masquerade	=> true,
 	forward_ports	=> [{
-		comment		=>  'my forward to somewhere',
-		portid		=> '123',
-		protocol	=> 'tcp',
-		to_port		=> '321',
-		to_addr		=> '1.2.3.4',},],
+			comment		=> 'forward 123 to other machine',
+			portid		=> '123',
+			protocol	=> 'tcp',
+			to_port		=> '321',
+			to_addr		=> '1.2.3.4',},
+		],
 }

@@ -6,29 +6,37 @@
 <%- unless @description.empty? -%>
   <description><%= @description %></description>
 <%- end -%>
-<% @interfaces.each do |interface| -%>
-  <interface name="<%= @interface %>"/>
-<% end -%>
-<% @sources.each do |source| -%>
-  <source name="<%= @source %>"/>
-<% end -%>
-<% @services.each do |service| -%>
-  <service name="<%= @service %>"/>
-<% end -%>
-<%- @ports.each do |comment, id_proto| -%>
-  <!-- <%= comment %> -->
-  <%- id_proto.each do |id, proto| -%>
-  <port port="<%= id %>" protocol="<%= proto %>"/>
-  <%- end -%>
+<%- @interfaces.each do |interface| -%>
+  <interface name="<%= interface %>"/>
 <%- end -%>
-<% @icmp_blocks.each do |icmp_block| -%>
-  <icmp-block name="<%= @icmp_block %>"/>
-<% end -%>
+<%- @sources.each do |source| -%>
+  <source name="<%= source %>"/>
+<%- end -%>
+<%- @services.each do |service| -%>
+  <service name="<%= service %>"/>
+<%- end -%>
+<%- @ports.each do |port| -%>
+ <%- unless port['comment'].empty? -%>
+  <!-- <%= port['comment'] %> -->
+ <%- end -%>
+  <port port="<%= port['port'] %>" protocol="<%= port['protocol'] %>"/>
+<%- end -%>
+<%- @icmp_blocks.each do |icmp_block| -%>
+  <icmp-block name="<%= icmp_block %>"/>
+<%- end -%>
 <%- if @masquerade == true -%>
   <masquerade/>
 <%- end -%>
 <%- @forward_ports.each do |fw_port| -%>
+ <%- unless fw_port['comment'].empty? -%>
   <!-- <%= fw_port['comment'] %> -->
+ <%- end -%>
+ <%- if fw_port['to_addr'].nil? -%>
+  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-port="<%= fw_port['to_port'] %>"/>
+ <%- elsif fw_port['to_port'].nil? -%>
+  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-addr="<%= fw_port['to_addr'] %>"/>
+ <%- else -%>
   <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-port="<%= fw_port['to_port'] %>" to-addr="<%= fw_port['to_addr'] %>"/>
+ <%- end -%>
 <%- end -%>
 </zone>

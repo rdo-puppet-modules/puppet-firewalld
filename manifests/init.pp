@@ -21,10 +21,6 @@
 #
 # This class installs/runs firewalld.
 #
-# Requires:
-#
-# Nothing.
-#
 class firewalld {
 
 	package { 'firewalld':
@@ -77,7 +73,7 @@ class firewalld {
 # Sample Usage:
 #
 #	class {'firewalld::configuration':
-#		default_zone    =>      'dmz',
+#		default_zone    =>      'custom',
 #		minimal_mark    =>      '200',
 #	}
 #
@@ -114,6 +110,10 @@ class firewalld::configuration (
 	}
 }
 
+# Class: firewalld::zone::base
+#
+# This class ensures that /etc/firewalld/zones/ exists.
+#
 class firewalld::zone::base {
 	include firewalld
 	file { '/etc/firewalld/zones/':
@@ -129,23 +129,54 @@ class firewalld::zone::base {
 	}
 }
 
-#$forward_ports = [{
-#		comment		=>  'my forward to somewhere',
-#		portid		=> '123',
-#		protocol	=> 'tcp',
-#		to_port		=> '321',
-#		to_addr		=> '1.2.3.4',},],
-
+# resource type firewalld::zone
+#
+# This defines a zone configuration.
+#
+# == Parameters:
+#
+# $short::	 	short readable name
+# $description::	long description of zone
+# $interfaces::		list of interfaces to bind to a zone
+# $sources::		list of source addresses or source address
+#			ranges ("address/mask") to bind to a zone
+# $ports::		list of ports to open
+# $services::		list of predefined firewalld services
+# $icmp_blocks::	list of predefined icmp-types to block
+# $masquerade::		enable masquerading ?
+# $forward_ports::	list of ports to forward to other port and/or machine
+#
+# Sample Usage:
+#
+#	firewalld::zone { "custom":
+#		description	=> "This is an example zone",
+#		services	=> ["ssh", "dhcpv6-client"],
+#		ports		=> [{
+#			comment		=> "open port for ssh",
+#			port		=> "22",
+#			protocol	=> "tcp",},
+#			{
+#			comment		=> "also for dhcpv6-client",
+#			port		=> "546",
+#			protocol	=> "udp",}],
+#		masquerade	=> true,
+#		forward_ports	=> [{
+#			comment		=> 'forward 123 to other machine',
+#			portid		=> '123',
+#			protocol	=> 'tcp',
+#			to_port		=> '321',
+#			to_addr		=> '1.2.3.4',},],}
+#
 define firewalld::zone(
-	$short = "",			# short readable name
-	$description = "",		# long description of zone
-	$interfaces = [],		# bind an interfaces to a zone
-	$sources = [],			# bind a source address or source address range ("address/mask") to a zone
-	$ports = {},			# e.g. {"ssh port" => {"22" => "tcp"}}
-	$services = [],			# predefined firewalld services, e.g. ["ssh", "dhcpv6-client"]
-	$icmp_blocks = [],		# predefined icmp-types to block, e.g. ["echo-reply"]
-	$masquerade = false,		# enable masquerading ?
-	$forward_ports = [],		#
+	$short = "",
+	$description = "",
+	$interfaces = [],
+	$sources = [],
+	$ports = [],
+	$services = [],
+	$icmp_blocks = [],
+	$masquerade = false,
+	$forward_ports = [],
 ) {
 	include firewalld::zone::base
 
