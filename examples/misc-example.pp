@@ -1,8 +1,8 @@
 # here is some example usage for some of the firewalld classes and types
+# run this with 'puppet apply misc-example.pp'
 
 class {'firewalld::configuration':
         default_zone    =>      'custom',
-        minimal_mark    =>      '200',
 }
 
 # define a zone
