@@ -65,8 +65,7 @@ class firewalld::configuration (
 
 	file { '/etc/firewalld/firewalld.conf':
 		ensure	=> file,
-		#source	=> "puppet:///modules/firewalld/firewalld.conf.default",
-		content	=> template("firewalld/firewalld.conf.erb"),
+		content	=> template('firewalld/firewalld.conf.erb'),
 		owner 	=> root,
 		group	=> root,
 		mode	=> '0640',
