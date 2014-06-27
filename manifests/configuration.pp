@@ -16,29 +16,31 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-# Class firewalld::configuration
+# == Class: firewalld::configuration
 #
 # This class configures firewalld.
 #
-# == Parameters:
+# === Parameters
 #
-# $default_zone::	Default zone.
-# $minimal_mark::	Marks up to this minimum are free for use.
-# $cleanup_on_exit::	If set to no or false the firewall configuration will
-#			not get cleaned up on exit or stop of firewalld
-# $lockdown::		If set to enabled, firewall changes with the D-Bus
-#			interface will be limited to applications that
-#			are listed in the lockdown whitelist.
-# $IPv6_rpfilter::	Performs a reverse path filter test on a packet for
-#			IPv6. If a reply to the packet would be sent via the
-#			same interface that the packet arrived on, the packet
-#			will match and be accepted, otherwise dropped.
+# [*default_zone*]
+#   Default zone.
+# [*minimal_mark*]
+#   Marks up to this minimum are free for use.
+# [*cleanup_on_exit*]
+#   If set to no or false the firewall configuration will not get cleaned up
+#   on exit or stop of firewalld
+# [*lockdown*]
+#   If set to enabled, firewall changes with the D-Bus interface will be
+#   limited to applications that are listed in the lockdown whitelist.
+# [*IPv6_rpfilter*]
+#   Performs a reverse path filter test on a packet for IPv6. If a reply to
+#   the packet would be sent via the same interface that the packet arrived on,
+#   the packet will match and be accepted, otherwise dropped.
 #
-# Sample Usage:
+# === Examples
 #
-#	class {'firewalld::configuration':
-#		default_zone    =>      'custom',
-#	}
+#  class {'firewalld::configuration':
+#    default_zone    =>      'custom',}
 #
 class firewalld::configuration (
 	$default_zone		= 'public',
