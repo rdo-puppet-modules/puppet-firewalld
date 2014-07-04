@@ -31,23 +31,14 @@
  <%- unless fw_port['comment'].nil? -%>
   <!-- <%= fw_port['comment'] %> -->
  <%- end -%>
- <%- if fw_port['to_addr'].nil? -%>
-  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-port="<%= fw_port['to_port'] %>"/>
- <%- elsif fw_port['to_port'].nil? -%>
-  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-addr="<%= fw_port['to_addr'] %>"/>
- <%- else -%>
-  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>" to-port="<%= fw_port['to_port'] %>" to-addr="<%= fw_port['to_addr'] %>"/>
- <%- end -%>
+  <forward-port port="<%= fw_port['portid'] %>" protocol="<%= fw_port['protocol'] %>"<% unless fw_port['to_port'].nil? %> to-port="<%= fw_port['to_port'] %>"<% end %><% unless fw_port['to_addr'].nil? %> to-addr="<%= fw_port['to_addr'] %>"<% end %>/>
 <%- end -%>
-
 <%- @rich_rules.each do |rule| -%>
-
  <%- if rule['family'].nil? -%>
   <rule>
  <%- else -%>
   <rule family="<%= rule['family'] %>">
  <%- end -%>
-
  <%- unless rule['source'].nil? -%>
   <%- if rule['source']['invert'].nil? -%>
     <source address="<%= rule['source']['address'] %>"/>
@@ -55,7 +46,6 @@
     <source address="<%= rule['source']['address'] %>" invert="true"/>
   <%- end -%>
  <%- end -%>
-
  <%- unless rule['destination'].nil? -%>
   <%- if rule['destination']['invert'].nil? -%>
     <destination address="<%= rule['destination']['address'] %>"/>
@@ -63,50 +53,47 @@
     <destination address="<%= rule['destination']['address'] %>" invert="true"/>
   <%- end -%>
  <%- end -%>
-
  <%- unless rule['service'].nil? -%>
     <service name="<%= rule['service'] %>"/>
  <%- end -%>
-
  <%- unless rule['port'].nil? -%>
     <port port="<%= rule['port']['portid'] %>" protocol="<%= rule['port']['protocol'] %>"/>
  <%- end -%>
-
  <%- unless rule['protocol'].nil? -%>
     <protocol value="<%= rule['protocol'] %>"/>
  <%- end -%>
-
  <%- unless rule['icmp_block'].nil? -%>
     <icmp-block name="<%= rule['icmp_block'] %>"/>
  <%- end -%>
-
  <%- if not rule['masquerade'].nil? and rule['masquerade'] == true -%>
     <masquerade/>
  <%- end -%>
-
  <%- unless rule['forward_port'].nil? -%>
-   <%- if rule['forward_port']['to_addr'].nil? -%>
-    <forward-port port="<%= rule['forward_port']['portid'] %>" protocol="<%= rule['forward_port']['protocol'] %>" to-port="<%= rule['forward_port']['to_port'] %>"/>
-   <%- elsif rule['forward_port']['to_port'].nil? -%>
-    <forward-port port="<%= rule['forward_port']['portid'] %>" protocol="<%= rule['forward_port']['protocol'] %>" to-addr="<%= rule['forward_port']['to_addr'] %>"/>
-   <%- else -%>
-    <forward-port port="<%= rule['forward_port']['portid'] %>" protocol="<%= rule['forward_port']['protocol'] %>" to-port="<%= rule['forward_port']['to_port'] %>" to-addr="<%= rule['forward_port']['to_addr'] %>"/>
-   <%- end -%>
+   <%- to_port=rule['forward_port']['to_port'] -%>
+   <%- to_addr=rule['forward_port']['to_addr'] -%>
+    <forward-port port="<%= rule['forward_port']['portid'] %>" protocol="<%= rule['forward_port']['protocol'] %>"<% unless to_port.nil? %> to-port="<%= to_port %>"<% end %><% unless to_addr.nil? %> to-addr="<%= to_addr %>"<% end %>/>
  <%- end -%>
-
  <%- unless rule['log'].nil? -%>
-    <log prefix="<%= rule['log']['prefix'] %>" level="<%= rule['log']['level'] %>">
+    <%- prefix=rule['log']['prefix'] -%>
+    <%- level=rule['log']['level'] -%>
+    <log<% unless prefix.nil? %> prefix="<%= prefix %>"<% end %><% unless level.nil? %> level="<%= level %>"<% end %>>
    <%- unless rule['log']['limit'].nil? -%>
       <limit value="<%= rule['log']['limit'] %>"/>
-    </log>
    <%- end -%>
+    </log>
  <%- end -%>
-
+ <%- unless rule['audit'].nil? -%>
+    <audit><% unless rule['audit']['limit'].nil? %> <limit value="<%= rule['audit']['limit'] %>"/> <% end %></audit>
+ <%- end -%>
  <%- unless rule['accept'].nil? -%>
     <accept/>
  <%- end -%>
-
+ <%- unless rule['reject'].nil? -%>
+    <reject<% unless rule['reject']['type'].nil? %> type="<%= rule['reject']['type'] %>"<% end %>/>
+ <%- end -%>
+ <%- unless rule['drop'].nil? -%>
+    <drop/>
+ <%- end -%>
   </rule>
 <%- end -%>
-
 </zone>

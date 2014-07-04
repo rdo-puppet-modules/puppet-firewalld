@@ -110,7 +110,24 @@ class firewalld::zone::base {
 #			protocol	=> 'tcp',
 #			to_port		=> '321',
 #			to_addr		=> '1.2.3.4',},],}
-#
+#	rich_rules	=> [{
+#			family		=> 'ipv4',
+#			source		=> {
+#				address		=> '192.168.1.0/24',
+#				invert		=> true,},
+#			port		=> {
+#				portid		=> '123-321',
+#				protocol	=> 'udp',},
+#			log		=> {
+#				prefix		=> 'local',
+#				level		=> 'notice',
+#				limit		=> '3/s',},
+#			audit		=> {
+#				limit		=> '2/h',},
+#			reject		=> {
+#				type		=> 'icmp-host-prohibited',},
+#			},],
+
 define firewalld::zone(
 	$short = '',
 	$description = '',

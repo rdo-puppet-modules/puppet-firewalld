@@ -28,22 +28,27 @@ firewalld::zone { 'custom':
 			destination		=> {
 				address		=> '2.2.2.2/24',},
 #			service		=> 'ssh',
-#			port		=> {
-#				portid		=> '123-321',
-#				protocol	=> 'udp',},
+			port		=> {
+				portid		=> '123-321',
+				protocol	=> 'udp',},
 #			protocol	=> 'ah',
 #			icmp_block	=> 'router-solicitation',
 #			masquerade	=> true,
-			forward_port	=> {
-				portid		=> '555',
-				protocol	=> 'udp',
-				to_port		=> '666',
-				to_addr		=> '6.6.6.6',},
+#			forward_port	=> {
+#				portid		=> '555',
+#				protocol	=> 'udp',
+#				to_port		=> '666',
+#				to_addr		=> '6.6.6.6',},
 			log		=> {
 				prefix		=> 'testing',
 				level		=> 'notice',
 				limit		=> '3/s',},
-			accept		=> true,
+			audit		=> {
+				limit		=> '2/h',},
+#			accept		=> true,
+			reject		=> {
+				type		=> 'icmp-host-prohibited',},
+#			drop		=> {},
 			},],
 
 }
