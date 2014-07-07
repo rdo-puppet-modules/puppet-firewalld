@@ -13,7 +13,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 # == Class: firewalld
 #
@@ -27,21 +27,21 @@ class firewalld {
 
 	# iptables service that comes with rhel/centos
 	service { 'iptables':		# don't let this interfere
-		enable => false,	# don't start on boot
 		ensure => stopped,	# ensure it's stopped
+		enable => false,	# don't start on boot
 	}
 
 	service { 'ip6tables':		# don't let this interfere
-		enable => false,	# don't start on boot
 		ensure => stopped,	# ensure it's stopped
+		enable => false,	# don't start on boot
 	}
 
 	service { 'firewalld':
-		ensure     => running,	# ensure it's running
+		ensure     => stopped,	# ensure it's running
 		enable     => true,	# start on boot
 		hasstatus  => true,	# init script has 'status' command
 		hasrestart => true,	# init script has 'restart' command
-		require => [
+		require    => [
 			Package['firewalld'],
 			File['/etc/firewalld/firewalld.conf'],	# require this file
 			Service['iptables', 'ip6tables'],	# ensure it's stopped

@@ -13,7 +13,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
 # == Class: firewalld::configuration
@@ -66,7 +66,7 @@ class firewalld::configuration (
 	file { '/etc/firewalld/firewalld.conf':
 		ensure	=> file,
 		content	=> template('firewalld/firewalld.conf.erb'),
-		owner 	=> root,
+		owner	=> root,
 		group	=> root,
 		mode	=> '0640',
 		require	=> Package['firewalld'], # make sure package is installed
