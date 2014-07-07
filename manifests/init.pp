@@ -37,7 +37,7 @@ class firewalld {
 	}
 
 	service { 'firewalld':
-		ensure     => stopped,	# ensure it's running
+		ensure     => running,	# ensure it's running
 		enable     => true,	# start on boot
 		hasstatus  => true,	# init script has 'status' command
 		hasrestart => true,	# init script has 'restart' command

@@ -63,7 +63,7 @@ class firewalld::zone::base {
 # [*rich_rules*]	list of rich language rules (firewalld.richlanguage(5))
 #   You have to specify one (and only one)
 #   of {service, port, protocol, icmp_block, masquerade, forward_port}
-#   and one of {accept, reject, drop}
+#   and one (and only one) of {accept, reject, drop}
 #   family - 'ipv4' or 'ipv6', optional, see Rule in firewalld.richlanguage(5)
 #   source - optional, see Source in firewalld.richlanguage(5)
 #     address - mandatory
