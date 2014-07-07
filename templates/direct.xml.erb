@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<direct>
+<%- @chains.each do |chain| -%>
+ <%- table=chain['table'] -%>
+ <%- if table.nil? -%>
+  <%- table='filter' -%>
+ <%- end -%>
+  <chain table="<%= table %>" ipv="<%= chain['ipv'] %>" chain="<%= chain['chain'] %>"/>
+<%- end -%>
+<%#- --------------------------------------------------------------------- -%>
+<%- @rules.each do |rule| -%>
+ <%- table=rule['table'] -%>
+ <%- if table.nil? -%>
+  <%- table='filter' -%>
+ <%- end -%>
+ <%- priority=rule['priority'] -%>
+ <%- if priority.nil? -%>
+  <%- priority='0' -%>
+ <%- end -%>
+  <rule priority="<%= priority %>" table="<%= table %>" ipv="<%= rule['ipv'] %>" chain="<%= rule['chain'] %>"><%= rule['args'] %></rule>
+<%- end -%>
+<%#- --------------------------------------------------------------------- -%>
+<%- @passthroughs.each do |pt| -%>
+  <passthrough ipv="<%= pt['ipv'] %>"><%= pt['args'] %></passthrough>
+<%- end -%>
+</direct>
