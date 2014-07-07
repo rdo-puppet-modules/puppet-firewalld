@@ -21,7 +21,7 @@
 #
 class firewalld::zone::base {
 
-	include firewalld
+	#include firewalld
 
 	file { '/etc/firewalld/zones/':
 		ensure	=> directory,		# make sure this is a directory
@@ -126,7 +126,7 @@ class firewalld::zone::base {
 #				limit		=> '2/h',},
 #			reject		=> {
 #				type		=> 'icmp-host-prohibited',},
-#			},],
+#			},],}
 
 define firewalld::zone(
 	$short = '',

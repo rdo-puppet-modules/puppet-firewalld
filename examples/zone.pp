@@ -1,5 +1,7 @@
-# here is some example usage for some of the firewalld classes and types
-# run this with 'puppet apply misc-example.pp'
+# here you can see how to create a zone configuration
+# see also firewalld.zone(5) man page
+
+# run this with 'puppet apply zone.pp'
 
 class {'firewalld::configuration':
         default_zone    =>      'custom',

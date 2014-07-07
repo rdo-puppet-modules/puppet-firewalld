@@ -22,6 +22,8 @@
 #
 # === Parameters
 #
+# All parameters are strings.
+#
 # [*default_zone*]
 #   Default zone.
 # [*minimal_mark*]
