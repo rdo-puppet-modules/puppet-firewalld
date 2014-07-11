@@ -38,7 +38,7 @@ class firewalld::zone::base {
 
 # == Define: firewalld::zone
 #
-# This defines a zone configuration.
+# This defines a zone configuration, see firewalld.zone (5) man page.
 #
 # === Parameters
 #

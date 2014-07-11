@@ -1,5 +1,6 @@
 # here you can see how to create a lockdown whitelist
 # see firewalld.lockdown-whitelist (5) man page.
+# You don't need this in most cases.
 
 # this can be run with 'puppet apply lockdown-whitelist.pp'
 

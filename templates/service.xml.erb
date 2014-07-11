@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+<%- unless @short.empty? -%>
+  <short><%= @short %></short>
+<%- end -%>
+<%- unless @description.empty? -%>
+  <description><%= @description %></description>
+<%- end -%>
+<%- @ports.each do |port| -%>
+  <port port="<%= port['port'] %>" protocol="<%= port['protocol'] %>"/>
+<%- end -%>
+<%- @modules.each do |mod| -%>
+  <module name="<%= mod %>"/>
+<%- end -%>
+<%- unless @destination.empty? -%>
+  <destination ipv4="<%= @destination['ipv4'] %>" ipv6="<%= @destination['ipv6'] %>"/>
+<%- end -%>
+</service>
