@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<zone>
+<zone<% unless @target.empty? %> target="<%= @target %>"<% end %>>
 <%- unless @short.empty? -%>
   <short><%= @short %></short>
 <%- end -%>

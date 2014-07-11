@@ -42,6 +42,9 @@ class firewalld::zone::base {
 #
 # === Parameters
 #
+# [*target*]		can be one of {'ACCEPT', '%%REJECT%%', 'DROP'}
+#   Used to accept, reject or drop every packet that doesn't match any rule
+#   (port, service, etc.). Default (when target is not specified) is reject.
 # [*short*]		short readable name
 # [*description*]	long description of zone
 # [*interfaces*]	list of interfaces to bind to a zone
@@ -129,6 +132,7 @@ class firewalld::zone::base {
 #			},],}
 
 define firewalld::zone(
+	$target = '',
 	$short = '',
 	$description = '',
 	$interfaces = [],
