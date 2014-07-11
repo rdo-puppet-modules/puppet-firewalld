@@ -33,6 +33,8 @@ firewalld::zone { 'custom':
 			port		=> {
 				portid		=> '123-321',
 				protocol	=> 'udp',},
+# these are commented out because you can specify only one of
+# {service, port, protocol, icmp_block, masquerade, forward_port}
 #			protocol	=> 'ah',
 #			icmp_block	=> 'router-solicitation',
 #			masquerade	=> true,
@@ -47,6 +49,7 @@ firewalld::zone { 'custom':
 				limit		=> '3/s',},
 			audit		=> {
 				limit		=> '2/h',},
+# the same as above, you can specify only one of {accept, reject, drop}
 #			accept		=> true,
 			reject		=> {
 				type		=> 'icmp-host-prohibited',},
