@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<whitelist>
+<%- @selinux_contexts.each do |ctxt| -%>
+  <selinux context="<%= ctxt %>"/>
+<%- end -%>
+<%- @commands.each do |command| -%>
+  <command name="<%= command %>"/>
+<%- end -%>
+<%- @users.each do |user| -%>
+ <%- if not user['username'].nil? -%>
+  <user name="<%= user['username'] %>"/>
+ <%- else -%>
+  <user id="<%= user['userid'] %>"/>
+ <%- end -%>
+<%- end -%>
+</whitelist>
