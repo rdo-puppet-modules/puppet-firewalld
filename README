@@ -1,18 +1,18 @@
 This is puppet-firewalld a puppet module for firewalld.
-To install this puppet module, copy this folder to your puppet modulepath.
 
-You can usually find out where this is by running (as superuser):
-# puppet config print modulepath
+You have several ways how to install it:
 
-Running (as superuser) 'puppet module list' should then show firewalld module.
+a) Install module from Puppet Forge
+# puppet module install jpopelka-firewalld
 
-Or if you want to keep up with upstream git repo, you can do:
+b) If you run Fedora/EPEL7, use
+# yum install puppet-firewalld
+
+c) If you want to keep up with upstream git repo, you can do:
 $ cd ~; mkdir git; cd git
 $ git clone https://github.com/jpopelka/puppet-firewalld.git
 $ su -c 'ln -s /home/<user>/git/puppet-firewalld /etc/puppet/modules/firewalld'
 
-There are also repositories with RPM packages for Fedora/RHEL7:
-https://copr.fedoraproject.org/coprs/jpopelka/puppet-firewalld/
 
 Look in the examples/ folder for usage.
 
