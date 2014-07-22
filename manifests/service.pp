@@ -42,16 +42,18 @@ class firewalld::service::base {
 #
 # [*short*]		short readable name
 # [*description*]	long description of service
-# [*ports*]		list of ports to open
-#   ports  => [{
-#          port     => mandatory, string, e.g. '1234'
-#          protocol => mandatory, string, e.g. 'tcp'
-#              },...]
+# [*ports*]
+#   list of ports to open
+#	ports  => [{
+#		port     => mandatory, string, e.g. '1234'
+#		protocol => mandatory, string, e.g. 'tcp' },...]
 # [*modules*]		list of kernel netfilter helpers to load
-# [*destination*]	specifies destination network as a network IP address
+# [*destination*]
+#   specifies destination network as a network IP address
 #   (optional with /mask), or a plain IP address.
-#   destination  => { ipv4 => string, mandatory to specify ipv4 and/or ipv6
-#                     ipv6 => string, mandatory to specify ipv4 and/or ipv6 }
+#	destination  => {
+#		ipv4 => string, mandatory to specify ipv4 and/or ipv6
+#		ipv6 => string, mandatory to specify ipv4 and/or ipv6 }
 #
 # === Examples
 #

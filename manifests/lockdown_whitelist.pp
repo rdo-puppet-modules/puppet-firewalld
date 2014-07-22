@@ -28,21 +28,21 @@
 #                       of a running application or service.
 # [*commands*]          list of commands. Command is a string - complete
 #                       command line including path and also attributes.
-# [*users*]             list of users
-#   users => [{
-#       username => string, mandatory to specify either username or userid
-#       userid   => string, mandatory to specify either username or userid
-#            },...]
+# [*users*]
+#   list of users
+#	users => [{
+#		username => string, mandatory to specify either username or userid
+#		userid   => string, mandatory to specify either username or userid
+#		},...]
 #
 # === Examples
 #
-# class {'firewalld::lockdown_whitelist':
+#   class {'firewalld::lockdown_whitelist':
 #	selinux_contexts  => ['system_u:system_r:NetworkManager_t:s0',
 #                             'system_u:system_r:virtd_t:s0-s0:c0.c1023'],
 #	commands          => ['/usr/bin/python -Es /usr/bin/firewall-config'],
 #	users             => [{username => 'me'},],}
-
-
+#
 class firewalld::lockdown_whitelist(
 	$selinux_contexts = [],
 	$commands = [],
