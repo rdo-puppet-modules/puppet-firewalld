@@ -152,6 +152,7 @@ define firewalld::zone(
 ) {
 
 	include firewalld::zone::base
+	include firewalld::configuration
 
 	if "${rich_rules}" != [] {
 		# TODO: assert there's one (and only one of)
