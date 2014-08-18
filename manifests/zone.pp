@@ -19,14 +19,17 @@
 #
 # This class ensures that /etc/firewalld/zones/ exists.
 #
-class firewalld::zone::base {
+class firewalld::zone::base (
+        	$purge_zones = 'true'
+        )
+        {
 
 	#include firewalld
 
 	file { '/etc/firewalld/zones/':
 		ensure	=> directory,		# make sure this is a directory
 		recurse	=> true,		# recursively manage directory
-		purge	=> true,		# purge all unmanaged files
+		purge	=> $purge_zones,	# purge all unmanaged files, unless overridden in ENC (i.e. Foreman)
 		force	=> true,		# also purge subdirs and links
 		owner	=> root,
 		group	=> root,
@@ -108,6 +111,7 @@ class firewalld::zone::base {
 #  firewalld::zone { "custom":
 #	description	=> "This is an example zone",
 #	services	=> ["ssh", "dhcpv6-client"],
+#	sources		=> ["10.0.0.8", "192.168.18.22", "2001:DB8:0:f00d:/64", ],
 #	ports		=> [{
 #			comment		=> "for our dummy service",
 #			port		=> "1234",
