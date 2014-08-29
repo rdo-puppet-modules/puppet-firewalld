@@ -18,7 +18,7 @@ firewalld::zone { 'custom':
 	masquerade	=> true,
 	forward_ports	=> [{
 			comment		=> 'forward 123 to other machine',
-			portid		=> '123',
+			port		=> '123',
 			protocol	=> 'tcp',
 			to_port		=> '321',
 			to_addr		=> '1.2.3.4',},],

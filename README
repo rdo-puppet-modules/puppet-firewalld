@@ -11,7 +11,7 @@ b) If you run Fedora/EPEL7, use
 c) If you want to keep up with upstream git repo, you can do:
 $ cd ~; mkdir git; cd git
 $ git clone https://github.com/jpopelka/puppet-firewalld.git
-$ su -c 'ln -s /home/<user>/git/puppet-firewalld /etc/puppet/modules/firewalld'
+$ su -c 'ln -s /home/user/git/puppet-firewalld /etc/puppet/modules/firewalld'
 
 
 Look in the examples/ folder for usage.

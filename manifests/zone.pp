@@ -67,7 +67,7 @@ class firewalld::zone::base (
 #   list of ports to forward to other port and/or machine
 #	forward_ports  => [{
 #		comment  => optional, string
-#		portid   => mandatory, string, e.g. '123'
+#		port     => mandatory, string, e.g. '123' or '123-125'
 #		protocol => mandatory, string, e.g. 'tcp'
 #		to_port  => mandatory to specify either to_port or/and to_addr
 #		to_addr  => mandatory to specify either to_port or/and to_addr },...]
@@ -119,7 +119,7 @@ class firewalld::zone::base (
 #	masquerade	=> true,
 #	forward_ports	=> [{
 #			comment		=> 'forward 123 to other machine',
-#			portid		=> '123',
+#			port		=> '123',
 #			protocol	=> 'tcp',
 #			to_port		=> '321',
 #			to_addr		=> '1.2.3.4',},],
