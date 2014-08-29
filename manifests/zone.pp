@@ -74,8 +74,8 @@ class firewalld::zone::base (
 # [*rich_rules*]
 #   list of rich language rules (firewalld.richlanguage(5))
 #	You have to specify one (and only one)
-#	of {service, port, protocol, icmp_block, masquerade, forward_port}
-#	and one (and only one) of {accept, reject, drop}
+#	of service, port, protocol, icmp_block, masquerade, forward_port
+#	and one (and only one) of accept, reject, drop
 #	family - 'ipv4' or 'ipv6', optional, see Rule in firewalld.richlanguage(5)
 #	source  => {  optional, see Source in firewalld.richlanguage(5)
 #		address  => mandatory, string, e.g. '192.168.1.0/24'
@@ -101,10 +101,10 @@ class firewalld::zone::base (
 #		limit  => string, optional }
 #	audit => {  see Audit in firewalld.richlanguage(5)
 #		limit => string, optional }
-#	accept - any value, e.g. true, see Action in firewalld.richlanguage(5)
-#	reject => { see Action in firewalld.richlanguage(5)
-#		type => string, optional }
-#	drop - any value, e.g. true, see Action in firewalld.richlanguage(5)
+#	action => {  see Action in firewalld.richlanguage(5)
+#		action      => string, mandatory, one of 'accept', 'reject', 'drop'
+#		reject_type => string, optional, use with 'reject' action only
+#		limit       => string, optional  }
 #
 # === Examples
 #
@@ -137,8 +137,9 @@ class firewalld::zone::base (
 #				limit		=> '3/s',},
 #			audit		=> {
 #				limit		=> '2/h',},
-#			reject		=> {
-#				type		=> 'icmp-host-prohibited',},
+#			action		=> {
+#				action		=> 'reject',
+#				reject_type	=> 'icmp-host-prohibited',},
 #			},],}
 #
 define firewalld::zone(
@@ -161,7 +162,6 @@ define firewalld::zone(
 	if "${rich_rules}" != [] {
 		# TODO: assert there's one (and only one of)
 		# {service, port, protocol, icmp_block, masquerade, forward_port}
-		# and one (and only one of) {accept, reject, drop}
 		# (So far I have no idea how to do that)
 	}
 

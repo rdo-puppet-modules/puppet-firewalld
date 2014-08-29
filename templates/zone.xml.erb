@@ -85,14 +85,17 @@
  <%- unless rule['audit'].nil? -%>
     <audit><% unless rule['audit']['limit'].nil? %> <limit value="<%= rule['audit']['limit'] %>"/> <% end %></audit>
  <%- end -%>
- <%- unless rule['accept'].nil? -%>
-    <accept/>
- <%- end -%>
- <%- unless rule['reject'].nil? -%>
-    <reject<% unless rule['reject']['type'].nil? %> type="<%= rule['reject']['type'] %>"<% end %>/>
- <%- end -%>
- <%- unless rule['drop'].nil? -%>
-    <drop/>
+ <%- unless rule['action'].nil? -%>
+  <%- action=rule['action']['action'] -%>
+  <%- rejecttype=rule['action']['reject_type'] -%>
+  <%- limit=rule['action']['limit'] -%>
+  <%- unless action.nil? -%>
+    <<%= action %><% unless rejecttype.nil? %> type="<%= rejecttype %>"<% end %>>
+   <%- unless limit.nil? -%>
+      <limit value="<%= limit %>"/>
+   <%- end -%>
+    </<%= action %>>
+  <%- end -%>
  <%- end -%>
   </rule>
 <%- end -%>

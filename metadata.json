@@ -1,6 +1,6 @@
 {
   "name": "jpopelka-firewalld",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "author": "Jiri Popelka <jpopelka@redhat.com>",
   "summary": "Puppet Module for Firewalld",
   "license": "GPLv2+",

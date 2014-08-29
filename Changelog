@@ -1,0 +1,10 @@
+v0.2.0
+- zone
+  - forward-port { portid renamed to port }
+  - change 'action' syntax in rich_rules
+
+v0.1.3
+- Fix zone.xml.erb (#2) and zone.pp (#3)
+
+v0.1.2
+- include firewalld::configuration in firewalld::zone (#1)

@@ -49,11 +49,9 @@ firewalld::zone { 'custom':
 				limit		=> '3/s',},
 			audit		=> {
 				limit		=> '2/h',},
-# the same as above, you can specify only one of {accept, reject, drop}
-#			accept		=> true,
-			reject		=> {
-				type		=> 'icmp-host-prohibited',},
-#			drop		=> {},
+			action		=> {
+				action		=> 'reject',
+				reject_type	=> 'icmp-host-prohibited',
+				limit		=> '2/m',},
 			},],
-
 }
