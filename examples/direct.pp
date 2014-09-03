@@ -19,5 +19,5 @@ class {'firewalld::direct':
 		ipv      => 'ipv4',
 		table    => 'mangle',
 		chain    => 'PREROUTING',
-		args     => "-p udp --sport 53 -m u32 --u32 '0&amp;0x0F000000=0x05000000 &amp;&amp; 22&amp;0xFFFF@16=0x01020304' -j DROP",},],
+		args     => "-p tcp -m tcp --dport 123 -j MARK --set-mark 1' -j DROP",},],
 }
