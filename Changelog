@@ -1,3 +1,6 @@
+v0.2.2
+- zone
+  - remove comment from ports and forward-ports
 v0.2.1
 - zone
   - rich_rules, rename action -> action_type
