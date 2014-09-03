@@ -50,7 +50,7 @@ firewalld::zone { 'custom':
 			audit		=> {
 				limit		=> '2/h',},
 			action		=> {
-				action		=> 'reject',
+				action_type	=> 'reject',
 				reject_type	=> 'icmp-host-prohibited',
 				limit		=> '2/m',},
 			},],

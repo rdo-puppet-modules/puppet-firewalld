@@ -86,7 +86,7 @@
     <audit><% unless rule['audit']['limit'].nil? %> <limit value="<%= rule['audit']['limit'] %>"/> <% end %></audit>
  <%- end -%>
  <%- unless rule['action'].nil? -%>
-  <%- action=rule['action']['action'] -%>
+  <%- action=rule['action']['action_type'] -%>
   <%- rejecttype=rule['action']['reject_type'] -%>
   <%- limit=rule['action']['limit'] -%>
   <%- unless action.nil? -%>

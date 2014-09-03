@@ -102,8 +102,8 @@ class firewalld::zone::base (
 #	audit => {  see Audit in firewalld.richlanguage(5)
 #		limit => string, optional }
 #	action => {  see Action in firewalld.richlanguage(5)
-#		action      => string, mandatory, one of 'accept', 'reject', 'drop'
-#		reject_type => string, optional, use with 'reject' action only
+#		action_type => string, mandatory, one of 'accept', 'reject', 'drop'
+#		reject_type => string, optional, use with 'reject' action_type only
 #		limit       => string, optional  }
 #
 # === Examples
@@ -138,7 +138,7 @@ class firewalld::zone::base (
 #			audit		=> {
 #				limit		=> '2/h',},
 #			action		=> {
-#				action		=> 'reject',
+#				action_type	=> 'reject',
 #				reject_type	=> 'icmp-host-prohibited',},
 #			},],}
 #
