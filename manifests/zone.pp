@@ -18,6 +18,7 @@
 # == Class: firewalld::zone::base
 #
 # This class ensures that /etc/firewalld/zones/ exists.
+# It is used in firewalld::zone and doesn't need to be used on its own.
 #
 class firewalld::zone::base (
         	$purge_zones = 'true'
@@ -41,7 +42,9 @@ class firewalld::zone::base (
 
 # == Define: firewalld::zone
 #
-# This defines a zone configuration, see firewalld.zone (5) man page.
+# This defines a zone configuration.
+# Result is a /etc/firewalld/zones/${name}.xml file, where ${name}
+# is name of the class. See also firewalld.zone (5) man page.
 #
 # === Parameters
 #
@@ -84,7 +87,7 @@ class firewalld::zone::base (
 #	service - string, see Service in firewalld.richlanguage(5)
 #	port => { see Port in firewalld.richlanguage(5)
 #		portid   => mandatory
-#			protocol => mandatory }
+#		protocol => mandatory }
 #	protocol - string, see Protocol in firewalld.richlanguage(5)
 #	icmp_block - string, see ICMP-Block in firewalld.richlanguage(5)
 #	masquerade - bool, see Masquerade in firewalld.richlanguage(5)

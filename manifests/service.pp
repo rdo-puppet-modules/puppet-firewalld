@@ -18,6 +18,7 @@
 # == Class: firewalld::service::base
 #
 # This class ensures that /etc/firewalld/services/ exists.
+# It is used in firewalld::service and doesn't need to be used on its own.
 #
 class firewalld::service::base {
 
@@ -35,8 +36,10 @@ class firewalld::service::base {
 
 # == Define: firewalld::service
 #
-# This defines a service configuration, see firewalld.service (5) man page.
-# You usually don't need this, you can simply add ports to zone.
+# This defines a service configuration.
+# You usually don't need this, you can simply add ports to zone (firewalld::zone).
+# Result is a /etc/firewalld/services/${name}.xml file, where ${name}
+# is name of the class. See also firewalld.service (5) man page.
 #
 # === Parameters
 #

@@ -18,6 +18,8 @@
 # == Class: firewalld
 #
 # This class installs/runs firewalld.
+# It's used in other classes (firewalld::configuration),
+# you don't need to use this on your own.
 #
 class firewalld {
 

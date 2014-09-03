@@ -17,7 +17,11 @@
 
 # == Class: firewalld::direct
 #
-# This defines a direct configuration, see firewalld.direct (5) man page.
+# This defines a direct configuration.
+# It should be used only as a last resort when it's not possible to use
+# firewalld::zone. You need to know the iptables internals,
+# like tables and command line arguments.
+# Result is a /etc/firewalld/direct.xml file, see firewalld.direct (5) man page.
 #
 # === Parameters
 #

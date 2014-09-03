@@ -21,6 +21,8 @@
 # users and user ids that are white-listed when firewalld lockdown feature
 # is enabled. See class firewalld::configuration and
 # firewalld.lockdown-whitelist (5) man page.
+# Also http://fedoraproject.org/wiki/Features/FirewalldRichLanguage
+# Result is a /etc/firewalld/lockdown-whitelist.xml file.
 #
 # === Parameters
 #

@@ -19,25 +19,29 @@
 # == Class: firewalld::configuration
 #
 # This class configures firewalld.
+# Result is /etc/firewalld/firewalld.conf file.
+# See also firewalld.conf(5) man page.
+# You don't need to use this if you are happy with default configuration.
 #
 # === Parameters
 #
 # All parameters are strings.
 #
 # [*default_zone*]
-#   Default zone.
+#   Default zone. Default value is 'public'.
 # [*minimal_mark*]
-#   Marks up to this minimum are free for use.
+#   Marks up to this minimum are free for use. Default value is '100'.
 # [*cleanup_on_exit*]
-#   If set to no or false the firewall configuration will not get cleaned up
-#   on exit or stop of firewalld
+#   If set to 'no' or 'false' the firewall configuration will not get cleaned up
+#   on exit or stop of firewalld. Default is 'yes'.
 # [*lockdown*]
-#   If set to enabled, firewall changes with the D-Bus interface will be
+#   If set to 'yes', firewall changes with the D-Bus interface will be
 #   limited to applications that are listed in the lockdown whitelist.
+#   Default is 'no'
 # [*IPv6_rpfilter*]
 #   Performs a reverse path filter test on a packet for IPv6. If a reply to
 #   the packet would be sent via the same interface that the packet arrived on,
-#   the packet will match and be accepted, otherwise dropped.
+#   the packet will match and be accepted, otherwise dropped. Default is 'yes'.
 #
 # === Examples
 #
