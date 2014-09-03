@@ -12,12 +12,10 @@ firewalld::zone { 'custom':
 	description	=> 'This is an example zone',
 	services	=> ['ssh', 'dhcpv6-client'],
 	ports		=> [{
-			comment		=> 'for our dummy service',
 			port		=> '1234',
 			protocol	=> 'tcp',},],
 	masquerade	=> true,
 	forward_ports	=> [{
-			comment		=> 'forward 123 to other machine',
 			port		=> '123',
 			protocol	=> 'tcp',
 			to_port		=> '321',

@@ -16,9 +16,6 @@
   <service name="<%= service %>"/>
 <%- end -%>
 <%- @ports.each do |port| -%>
- <%- unless port['comment'].nil? -%>
-  <!-- <%= port['comment'] %> -->
- <%- end -%>
   <port port="<%= port['port'] %>" protocol="<%= port['protocol'] %>"/>
 <%- end -%>
 <%- @icmp_blocks.each do |icmp_block| -%>
@@ -28,9 +25,6 @@
   <masquerade/>
 <%- end -%>
 <%- @forward_ports.each do |fw_port| -%>
- <%- unless fw_port['comment'].nil? -%>
-  <!-- <%= fw_port['comment'] %> -->
- <%- end -%>
   <forward-port port="<%= fw_port['port'] %>" protocol="<%= fw_port['protocol'] %>"<% unless fw_port['to_port'].nil? %> to-port="<%= fw_port['to_port'] %>"<% end %><% unless fw_port['to_addr'].nil? %> to-addr="<%= fw_port['to_addr'] %>"<% end %>/>
 <%- end -%>
 <%- @rich_rules.each do |rule| -%>

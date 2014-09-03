@@ -1,6 +1,7 @@
 v0.2.1
 - zone
   - rich_rules, rename action -> action_type
+  - remove comment from ports and forward-ports
 v0.2.0
 - zone
   - forward-port { portid renamed to port }

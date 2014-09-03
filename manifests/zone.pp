@@ -57,7 +57,6 @@ class firewalld::zone::base (
 # [*ports*]
 #   list of ports to open
 #	ports  => [{
-#		comment  => optional, string
 #		port     => mandatory, string, e.g. '1234'
 #		protocol => mandatory, string, e.g. 'tcp' },...]
 # [*services*]		list of predefined firewalld services
@@ -66,7 +65,6 @@ class firewalld::zone::base (
 # [*forward_ports*]
 #   list of ports to forward to other port and/or machine
 #	forward_ports  => [{
-#		comment  => optional, string
 #		port     => mandatory, string, e.g. '123' or '123-125'
 #		protocol => mandatory, string, e.g. 'tcp'
 #		to_port  => mandatory to specify either to_port or/and to_addr
@@ -113,12 +111,10 @@ class firewalld::zone::base (
 #	services	=> ["ssh", "dhcpv6-client"],
 #	sources		=> ["10.0.0.8", "192.168.18.22", "2001:DB8:0:f00d:/64", ],
 #	ports		=> [{
-#			comment		=> "for our dummy service",
 #			port		=> "1234",
 #			protocol	=> "tcp",},],
 #	masquerade	=> true,
 #	forward_ports	=> [{
-#			comment		=> 'forward 123 to other machine',
 #			port		=> '123',
 #			protocol	=> 'tcp',
 #			to_port		=> '321',
