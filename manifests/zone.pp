@@ -158,11 +158,11 @@ define firewalld::zone(
 	include firewalld::zone::base
 	include firewalld::configuration
 
-	if "${rich_rules}" != [] {
-		# TODO: assert there's one (and only one of)
-		# {service, port, protocol, icmp_block, masquerade, forward_port}
-		# (So far I have no idea how to do that)
-	}
+	# if "${rich_rules}" != [] {
+	# 	# TODO: assert there's one (and only one of)
+	# 	# {service, port, protocol, icmp_block, masquerade, forward_port}
+	# 	# (So far I have no idea how to do that)
+	# }
 
 	file { "/etc/firewalld/zones/${name}.xml":
 		content	=> template('firewalld/zone.xml.erb'),
