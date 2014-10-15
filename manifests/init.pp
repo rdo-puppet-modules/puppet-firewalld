@@ -23,30 +23,30 @@
 #
 class firewalld {
 
-	package { 'firewalld':
-		ensure => present,	# install package
-	}
+  package { 'firewalld':
+    ensure => present,  # install package
+  }
 
-	# iptables service that comes with rhel/centos
-	service { 'iptables':		# don't let this interfere
-		ensure => stopped,	# ensure it's stopped
-		enable => false,	# don't start on boot
-	}
+  # iptables service that comes with rhel/centos
+  service { 'iptables':    # don't let this interfere
+    ensure => stopped,     # ensure it's stopped
+    enable => false,       # don't start on boot
+  }
 
-	service { 'ip6tables':		# don't let this interfere
-		ensure => stopped,	# ensure it's stopped
-		enable => false,	# don't start on boot
-	}
+  service { 'ip6tables':    # don't let this interfere
+    ensure => stopped,      # ensure it's stopped
+    enable => false,        # don't start on boot
+  }
 
-	service { 'firewalld':
-		ensure     => running,	# ensure it's running
-		enable     => true,	# start on boot
-		hasstatus  => true,	# init script has 'status' command
-		hasrestart => true,	# init script has 'restart' command
-		require    => [
-			Package['firewalld'],
-			File['/etc/firewalld/firewalld.conf'],	# require this file
-			Service['iptables', 'ip6tables'],	# ensure it's stopped
-		],
-	}
+  service { 'firewalld':
+    ensure     => running,  # ensure it's running
+    enable     => true,     # start on boot
+    hasstatus  => true,     # init script has 'status' command
+    hasrestart => true,     # init script has 'restart' command
+    require    => [
+      Package['firewalld'],
+      Service['iptables', 'ip6tables'],  # ensure it's stopped
+    ],
+  }
+  Service['firewalld'] -> Firewalld_zone<||>
 }
