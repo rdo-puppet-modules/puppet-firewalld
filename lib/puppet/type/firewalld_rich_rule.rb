@@ -1,6 +1,6 @@
 require 'puppet'
 
-Puppet::Type.newtype(:rich_rule) do
+Puppet::Type.newtype(:firewalld_rich_rule) do
   desc <<-EOT
           Rich language rule (firewalld.richlanguage(5)
           You have to specify one (and only one)

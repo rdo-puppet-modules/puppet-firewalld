@@ -1,6 +1,6 @@
 require 'puppet'
 
-Puppet::Type.newtype(:zone) do
+Puppet::Type.newtype(:firewalld_zone) do
   desc <<-EOT
       = Define: firewalld::zone
 

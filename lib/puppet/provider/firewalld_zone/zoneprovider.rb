@@ -2,7 +2,7 @@ require 'puppet'
 require 'rexml/document'
 include REXML
 
-Puppet::Type.type(:zone).provide :zoneprovider do
+Puppet::Type.type(:firewalld_zone).provide :zoneprovider do
     desc "The zone config manipulator"
 
     commands :firewall => 'firewall-cmd'

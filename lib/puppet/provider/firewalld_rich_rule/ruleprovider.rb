@@ -2,7 +2,7 @@ require 'puppet'
 require 'rexml/document'
 include REXML
 
-Puppet::Type.type(:rich_rule).provide :ruleprovider do
+Puppet::Type.type(:firewalld_rich_rule).provide :ruleprovider do
     desc "The rule config manipulator"
 
     commands :firewall => 'firewall-cmd'
