@@ -49,33 +49,33 @@
 #    default_zone    =>      'custom',}
 #
 class firewalld::configuration (
-	$default_zone		= 'public',
-	$minimal_mark		= '100',
-	$cleanup_on_exit	= 'yes',
-	$lockdown		= 'no',
-	$IPv6_rpfilter		= 'yes'
+  $default_zone    = 'public',
+  $minimal_mark    = '100',
+  $cleanup_on_exit = 'yes',
+  $lockdown        = 'no',
+  $IPv6_rpfilter   = 'yes'
 ) {
-	include firewalld
+  include firewalld
 
-	file { '/etc/firewalld/':
-		ensure	=> directory,		# make sure this is a directory
-		#recurse	=> true,		# recursively manage directory
-		#purge	=> true,		# purge all unmanaged files
-		#force	=> true,		# also purge subdirs and links
-		owner	=> root,
-		group	=> root,
-		mode	=> '0750',
-		require	=> Package['firewalld'], # make sure package is installed
-		notify	=> Service['firewalld'], # restart service
-	}
+  file { '/etc/firewalld/':
+    ensure   => directory,            # make sure this is a directory
+    #recurse => true,                 # recursively manage directory
+    #purge   => true,                 # purge all unmanaged files
+    #force   => true,                 # also purge subdirs and links
+    owner    => root,
+    group    => root,
+    mode     => '0750',
+    require  => Package['firewalld'], # make sure package is installed
+    notify   => Service['firewalld'], # restart service
+  }
 
-	file { '/etc/firewalld/firewalld.conf':
-		ensure	=> file,
-		content	=> template('firewalld/firewalld.conf.erb'),
-		owner	=> root,
-		group	=> root,
-		mode	=> '0640',
-		require	=> Package['firewalld'], # make sure package is installed
-		notify	=> Service['firewalld'], # restart service
-	}
+  file { '/etc/firewalld/firewalld.conf':
+    ensure  => file,
+    content => template('firewalld/firewalld.conf.erb'),
+    owner   => root,
+    group   => root,
+    mode    => '0640',
+    require => Package['firewalld'], # make sure package is installed
+    notify  => Service['firewalld'], # restart service
+  }
 }
