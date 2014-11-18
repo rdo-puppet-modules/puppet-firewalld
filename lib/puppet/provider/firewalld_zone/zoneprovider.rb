@@ -1,18 +1,30 @@
 require 'puppet'
+require 'puppet/provider/firewalld'
 require 'rexml/document'
 include REXML
 
-Puppet::Type.type(:firewalld_zone).provide :zoneprovider do
-    desc "The zone config manipulator"
+Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Provider::Firewalld do
+    @doc = "The zone config manipulator"
 
     commands :firewall => 'firewall-cmd'
 
     mk_resource_methods
  
+    def flush
+        Puppet.debug "firewalld zone provider: flushing (@resource[:name])"
+	write_zonefile
+    end
+
     def create
+        Puppet.debug "firewalld zone provider: create (@resource[:name])"
+	write_zonefile
+    end
+
+    def write_zonefile
+        Puppet.debug "firewalld zone provider: write_zonefile (@resource[:name])"
         doc = REXML::Document.new
-        doc << REXML::XMLDecl.default
         zone = doc.add_element 'zone'
+        doc << REXML::XMLDecl.new(version='1.0',encoding='utf-8')
 
         if @resource[:target]
           zone.add_attribute('target', @resource[:target])
@@ -24,8 +36,8 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider do
         end
 
         if @resource[:description]
-          short = zone.add_element 'description'
-          short.text = @resource[:description]
+          description = zone.add_element 'description'
+          description.text = @resource[:description]
         end
 
         if @resource[:interfaces]
@@ -48,6 +60,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider do
           @resource[:services].each do |service|
             srv = zone.add_element 'service'
             srv.add_attribute('name', service)
+            Puppet.debug "firewalld zone provider: adding service (#{service}) to zone"
           end
         end
 
@@ -183,17 +196,226 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider do
         file = File.open(path, "w+")
 	doc.write( file, 2 )
         file.close
+        Puppet.debug "firewalld zone provider: Changes to #{path} configuration saved to disk."
         firewall('--reload')
+        Puppet.debug "firewalld zone provider: reloading firewalld configuration"
     end
+
+  def self.instances
+    debug "[instances]"
+    zonefiles = Dir["/etc/firewalld/zones/*.xml"]
+
+    zone = []
+
+    zonefiles.each do |path|
+      zonename = File.basename(path, ".xml")
+      doc = REXML::Document.new File.read(path)
+      target = ''
+      version = ''
+      short = ''
+      description = ''
+      interface = []
+      source = []
+      service = []
+      ports = []
+      icmp_blocks = []
+      masquerade = ''
+      forward_ports = []
+      rich_rules = []
+
+      # Set zone level variables
+      root = doc.root
+      target = root.attributes["target"]
+      version = root.attributes["version"]
+
+      # Loop through the zone elements
+      doc.elements.each("zone/*") do |e|
+
+        if e.name == 'short'
+          short = e.text.to_s.strip
+        end
+        if e.name == 'description'
+          description = e.text.to_s.strip
+        end
+        if e.name == 'interface'
+          interface << e.attributes["name"]
+        end
+        if e.name == 'source'
+          source << e.attributes["address"]
+        end
+        if e.name == 'service'
+          service << e.attributes["name"]
+        end
+        if e.name == 'port'
+          ports << {
+            'port' => e.attributes["port"].nil? ? nil : e.attributes["port"],
+            'protocol' => e.attributes["protocol"].nil? ? nil : e.attributes["protocol"],
+          }
+        end
+        if e.name == 'icmp-block'
+          icmp_blocks << e.attributes["name"]
+        end
+        if e.name == 'masquerade'
+          masquerade << e.text.to_s.strip
+        end
+        if e.name == 'forward-port'
+          forward_ports << {
+            'port' => e.attributes["port"].nil? ? nil : e.attributes["port"],
+            'protocol' => e.attributes["protocol"].nil? ? nil : e.attributes["protocol"],
+            'to-port' => e.attributes["to-port"].nil? ? nil : e.attributes["to-port"],
+            'to-addr' => e.attributes["to-addr"].nil? ? nil : e.attributes["to-addr"],
+          }
+        end
+
+        if e.name == 'rule'
+
+            rule_source = []
+            rule_destination = []
+            rule_service = []
+            rule_ports = []
+            rule_protocol = []
+            rule_icmp_blocks = []
+            rule_masquerade = ''
+            rule_forward_ports = []
+            rule_log = []
+            rule_audit = []
+            rule_action = []
+
+          e.elements.each do |rule|
+            if rule.name == 'source'
+              rule_source << rule.attributes["address"]
+            end
+            if rule.name == 'destination'
+              rule_destination << rule.attributes["address"]
+            end
+            if rule.name == 'service'
+              rule_service << rule.attributes["name"]
+            end
+            if rule.name == 'port'
+              rule_ports << {
+                'port' => rule.attributes["port"].nil? ? nil : rule.attributes["port"],
+                'protocol' => rule.attributes["protocol"].nil? ? nil : rule.attributes["protocol"],
+              }
+            end
+            if rule.name == 'protocol'
+              rule_protocol << rule.attributes["value"]
+            end
+            if rule.name == 'icmp-block'
+              rule_icmp_blocks << rule.attributes["name"]
+            end
+            if rule.name == 'masquerade'
+              rule_masquerade << rule.text.to_s.strip
+            end
+            if rule.name == 'forward-port'
+              rule_forward_ports << {
+                'port' => rule.attributes["port"].nil? ? nil : rule.attributes["port"],
+                'protocol' => rule.attributes["protocol"].nil? ? nil : rule.attributes["protocol"],
+                'to-port' => rule.attributes["to-port"].nil? ? nil : rule.attributes["to-port"],
+                'to-addr' => rule.attributes["to-addr"].nil? ? nil : rule.attributes["to-addr"],
+              }
+            end
+            if rule.name == 'log'
+              begin
+                limit = rule.elements["limit"].attributes["value"]
+              rescue
+                limit = nil
+              end
+              rule_log << {
+                'prefix' => rule.attributes["prefix"].nil? ? nil : rule.attributes["prefix"],
+                'level' => rule.attributes["level"].nil? ? nil : rule.attributes["level"],
+                'level' => rule.attributes["level"].nil? ? nil : rule.attributes["level"],
+                'limit' => limit,
+              }
+            end
+            if rule.name == 'audit'
+              rule_audit << {
+                 'limit'  => rule.elements["limit"].attributes["value"].nil? ? nil : rule.elements["limit"].attributes["value"],
+              }
+            end
+            if rule.name == 'accept'
+              begin
+                limit = rule.elements["limit"].attributes["value"]
+              rescue
+                limit = nil
+              end
+              rule_action << {
+                'action_type' => rule.name,
+                'reject_type' => nil,
+                'limit' => limit,
+              }
+            end
+            if rule.name == 'reject'
+              begin
+                limit = rule.elements["limit"].attributes["value"]
+              rescue
+                limit = nil
+              end
+              rule_action << {
+                'action_type' => rule.name,
+                'reject_type' => rule.attributes["type"].nil? ? nil : rule.attributes["type"],
+                'limit'  => limit,
+              }
+            end
+            if rule.name == 'drop'
+              begin
+                limit = rule.elements["limit"].attributes["value"]
+              rescue
+                limit = nil
+              end
+              rule_action << {
+                'action_type' => rule.name,
+                'reject_type' => nil,
+                'limit'  => limit,
+              }
+            end
+          end
+          rich_rules << {
+            :sources       => rule_source.empty? ? nil : rule_source,
+            :destination   => rule_destination.empty? ? nil : rule_destination,
+            :services      => rule_service.empty? ? nil : rule_service,
+            :ports         => rule_ports.empty? ? nil : rule_ports,
+            :protocol      => rule_protocol.empty? ? nil : rule_protocol,
+            :icmp_blocks   => rule_icmp_blocks.empty? ? nil : rule_icmp_blocks,
+            :masquerade    => rule_masquerade.nil? ? nil : rule_masquerade,
+            :forward_ports => rule_forward_ports.empty? ? nil : rule_forward_ports,
+            :log           => rule_log.empty? ? nil : rule_log,
+            :audit         => rule_audit.empty? ? nil : rule_audit,
+            :action        => rule_action.empty? ? nil : rule_action,
+           }
+
+        end
+
+      end
+
+      # Add hash to the zone array
+      zone << new({
+        :name          => zonename,
+        :ensure        => :present,
+        :target        => target.nil? ? nil : target,
+        :version       => version.nil? ? nil : version,
+        :short         => short.nil? ? nil : short,
+        :description   => description.nil? ? nil : description,
+        :interfaces    => interface.empty? ? nil : interface,
+        :sources       => source.empty? ? nil : source,
+        :services      => service.empty? ? nil : service,
+        :ports         => ports.empty? ? nil : ports,
+        :icmp_blocks   => icmp_blocks.empty? ? nil : icmp_blocks,
+        :masquerade    => masquerade.nil? ? nil : masquerade,
+        :forward_ports => forward_ports.empty? ? nil : forward_ports,
+        :rich_rules    => rich_rules.empty? ? nil : rich_rules,
+      })
+    end
+    zone
+  end
  
     def destroy
         path = '/etc/firewalld/zones' + @resource[:name] + '.xml'
         File.delete(path)
+        Puppet.debug "firewalld zone provider: removing (#{path})"
+        @property_hash.clear
     end
  
     def exists?
-        # TODO: verify correctness of zone xml file https://fedorahosted.org/firewalld/ticket/8
-        path = '/etc/firewalld/zones/' + @resource[:name] + '.xml'
-        File.exists?(path)
+        @property_hash[:ensure] == :present || false
     end
 end
