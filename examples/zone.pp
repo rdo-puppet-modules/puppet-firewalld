@@ -1,6 +1,8 @@
 # here you can see how to create a zone configuration
 # see also firewalld.zone(5) man page
 
+# run 'puppet resource firewalld_zone' to see the current zone config
+#
 # run this with 'puppet apply zone.pp'
 
 class {'firewalld::configuration':
