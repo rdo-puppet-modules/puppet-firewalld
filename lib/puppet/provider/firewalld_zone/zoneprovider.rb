@@ -79,7 +79,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           end
         end
 
-        if @resource[:masquerade]
+        if @resource[:masquerade].at(0).to_s == 'true'
             zone.add_element 'masquerade'
         end
 
@@ -219,7 +219,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
       service = []
       ports = []
       icmp_blocks = []
-      masquerade = ''
+      masquerade = false
       forward_ports = []
       rich_rules = []
 
@@ -256,7 +256,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           icmp_blocks << e.attributes["name"]
         end
         if e.name == 'masquerade'
-          masquerade << e.text.to_s.strip
+          masquerade = true
         end
         if e.name == 'forward-port'
           forward_ports << {
@@ -275,7 +275,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
             rule_ports = []
             rule_protocol = []
             rule_icmp_blocks = []
-            rule_masquerade = ''
+            rule_masquerade = false
             rule_forward_ports = []
             rule_log = []
             rule_audit = []
@@ -304,7 +304,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
               rule_icmp_blocks << rule.attributes["name"]
             end
             if rule.name == 'masquerade'
-              rule_masquerade << rule.text.to_s.strip
+              rule_masquerade = true
             end
             if rule.name == 'forward-port'
               rule_forward_ports << {
