@@ -167,5 +167,9 @@ define firewalld::zone(
     forward_ports => $forward_ports,
     rich_rules    => $rich_rules,
   }
+  #Ensure the zone file is present and not destroyed if purge_zones is set to true
+  file { "/etc/firewalld/zones/$name.xml":
+    ensure  => present
+  }
 }
 
