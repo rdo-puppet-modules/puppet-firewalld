@@ -387,6 +387,13 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
 
       end
 
+      # convert the masquerade variable from boolean to array so the data type matches the data type returned by the puppet resource.
+      if masquerade
+        masquerade = ["true"]
+      else
+        masquerade = ["false"]
+      end
+
       # Add hash to the zone array
       zone << new({
         :name          => zonename,
