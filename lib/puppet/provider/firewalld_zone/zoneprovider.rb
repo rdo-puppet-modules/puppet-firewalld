@@ -11,17 +11,17 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
     mk_resource_methods
  
     def flush
-        Puppet.debug "firewalld zone provider: flushing (@resource[:name])"
+        Puppet.debug "firewalld zone provider: flushing (#{@resource[:name]})"
 	write_zonefile
     end
 
     def create
-        Puppet.debug "firewalld zone provider: create (@resource[:name])"
+        Puppet.debug "firewalld zone provider: create (#{@resource[:name]})"
 	write_zonefile
     end
 
     def write_zonefile
-        Puppet.debug "firewalld zone provider: write_zonefile (@resource[:name])"
+        Puppet.debug "firewalld zone provider: write_zonefile (#{@resource[:name]})"
         doc = REXML::Document.new
         zone = doc.add_element 'zone'
         doc << REXML::XMLDecl.new(version='1.0',encoding='utf-8')
