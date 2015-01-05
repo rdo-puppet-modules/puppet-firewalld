@@ -260,10 +260,10 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
         end
         if e.name == 'forward-port'
           forward_ports << {
-            'port' => e.attributes["port"].nil? ? nil : e.attributes["port"],
+            'port' => e.attributes["port"].nil? ? nil : e.attributes['port'],
             'protocol' => e.attributes["protocol"].nil? ? nil : e.attributes["protocol"],
-            'to-port' => e.attributes["to-port"].nil? ? nil : e.attributes["to-port"],
-            'to-addr' => e.attributes["to-addr"].nil? ? nil : e.attributes["to-addr"],
+            'to_port' => e.attributes["to-port"].nil? ? nil : e.attributes["to-port"],
+            'to_addr' => e.attributes["to-addr"].nil? ? nil : e.attributes["to-addr"],
           }
         end
 
