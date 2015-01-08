@@ -107,9 +107,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
             if rich_rule['source']
               source = rule.add_element 'source'
               source.add_attribute('address', rich_rule['source']['address'])
-              if rich_rule['source']['invert']
-                source.add_attribute('invert', 'true')
-              end
+              source.add_attribute('invert', rich_rule['source']['invert'])
             end
 
             if rich_rule['destination']
@@ -285,9 +283,15 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           e.elements.each do |rule|
             if rule.name == 'source'
               rule_source['address'] = rule.attributes["address"]
-#TODO this functionality works properly only if invert is explicitly defined as true or false in the config.... 
-#if the variiable is not set in the manifest for the roch tule puppet will believe the rule has been changed and always take action
-              rule_source['invert'] = rule.attributes["invert"].nil? ? false : rule.attributes["invert"]
+              Puppet.debug "checking (#{rule_source['invert']})"
+              if rule.attributes["invert"] == 'true'
+                rule_source['invert'] = true
+              else
+                rule_source['invert'] = rule.attributes["invert"].nil? ? nil : false
+              end
+              Puppet.debug "pre cleanup (#{rule_source['invert']})"
+              rule_source.delete_if { |key,value| key == 'invert' and value == nil} 
+
             end
             if rule.name == 'destination'
               rule_destination['address'] = rule.attributes["address"]
