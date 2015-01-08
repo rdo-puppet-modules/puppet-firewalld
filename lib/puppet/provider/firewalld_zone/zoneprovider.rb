@@ -113,9 +113,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
             if rich_rule['destination']
               dest = rule.add_element 'destination'
               dest.add_attribute('address', rich_rule['destination']['address'])
-              if rich_rule['destination']['invert']
-                dest.add_attribute('invert', 'true')
-              end
+              dest.add_attribute('invert', rich_rule['destination']['invert'])
             end
 
             if rich_rule['service']
@@ -283,18 +281,22 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           e.elements.each do |rule|
             if rule.name == 'source'
               rule_source['address'] = rule.attributes["address"]
-              Puppet.debug "checking (#{rule_source['invert']})"
               if rule.attributes["invert"] == 'true'
                 rule_source['invert'] = true
               else
                 rule_source['invert'] = rule.attributes["invert"].nil? ? nil : false
               end
-              Puppet.debug "pre cleanup (#{rule_source['invert']})"
               rule_source.delete_if { |key,value| key == 'invert' and value == nil} 
 
             end
             if rule.name == 'destination'
               rule_destination['address'] = rule.attributes["address"]
+              if rule.attributes["invert"] == 'true'
+                rule_destination['invert'] = true
+              else
+                rule_destination['invert'] = rule.attributes["invert"].nil? ? nil : false
+              end
+              rule_destination.delete_if { |key,value| key == 'invert' and value == nil}
             end
             if rule.name == 'service'
               rule_service = rule.attributes["name"]
