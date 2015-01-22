@@ -11,17 +11,17 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
     mk_resource_methods
  
     def flush
-        Puppet.debug "firewalld zone provider: flushing (@resource[:name])"
+        Puppet.debug "firewalld zone provider: flushing (#{@resource[:name]})"
 	write_zonefile
     end
 
     def create
-        Puppet.debug "firewalld zone provider: create (@resource[:name])"
+        Puppet.debug "firewalld zone provider: create (#{@resource[:name]})"
 	write_zonefile
     end
 
     def write_zonefile
-        Puppet.debug "firewalld zone provider: write_zonefile (@resource[:name])"
+        Puppet.debug "firewalld zone provider: write_zonefile (#{@resource[:name]})"
         doc = REXML::Document.new
         zone = doc.add_element 'zone'
         doc << REXML::XMLDecl.new(version='1.0',encoding='utf-8')
@@ -79,7 +79,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           end
         end
 
-        if @resource[:masquerade]
+        if @resource[:masquerade].at(0).to_s == 'true'
             zone.add_element 'masquerade'
         end
 
@@ -107,17 +107,13 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
             if rich_rule['source']
               source = rule.add_element 'source'
               source.add_attribute('address', rich_rule['source']['address'])
-              if rich_rule['source']['invert']
-                source.add_attribute('invert', 'true')
-              end
+              source.add_attribute('invert', rich_rule['source']['invert'])
             end
 
             if rich_rule['destination']
               dest = rule.add_element 'destination'
               dest.add_attribute('address', rich_rule['destination']['address'])
-              if rich_rule['destination']['invert']
-                dest.add_attribute('invert', 'true')
-              end
+              dest.add_attribute('invert', rich_rule['destination']['invert'])
             end
 
             if rich_rule['service']
@@ -219,7 +215,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
       service = []
       ports = []
       icmp_blocks = []
-      masquerade = ''
+      masquerade = false
       forward_ports = []
       rich_rules = []
 
@@ -256,63 +252,73 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           icmp_blocks << e.attributes["name"]
         end
         if e.name == 'masquerade'
-          masquerade << e.text.to_s.strip
+          masquerade = true
         end
         if e.name == 'forward-port'
           forward_ports << {
-            'port' => e.attributes["port"].nil? ? nil : e.attributes["port"],
+            'port' => e.attributes["port"].nil? ? nil : e.attributes['port'],
             'protocol' => e.attributes["protocol"].nil? ? nil : e.attributes["protocol"],
-            'to-port' => e.attributes["to-port"].nil? ? nil : e.attributes["to-port"],
-            'to-addr' => e.attributes["to-addr"].nil? ? nil : e.attributes["to-addr"],
+            'to_port' => e.attributes["to-port"].nil? ? nil : e.attributes["to-port"],
+            'to_addr' => e.attributes["to-addr"].nil? ? nil : e.attributes["to-addr"],
           }
         end
 
         if e.name == 'rule'
 
-            rule_source = []
-            rule_destination = []
-            rule_service = []
-            rule_ports = []
-            rule_protocol = []
-            rule_icmp_blocks = []
-            rule_masquerade = ''
-            rule_forward_ports = []
-            rule_log = []
-            rule_audit = []
-            rule_action = []
+            rule_source = {}
+            rule_destination = {}
+            rule_service = ''
+            rule_ports = {}
+            rule_protocol = ''
+            rule_icmp_blocks = ''
+            rule_masquerade = false
+            rule_forward_ports = {}
+            rule_log = {}
+            rule_audit = {}
+            rule_action = {}
+            rule_family = 'ipv4'
 
           e.elements.each do |rule|
             if rule.name == 'source'
-              rule_source << rule.attributes["address"]
+              rule_source['address'] = rule.attributes["address"]
+              if rule.attributes["invert"] == 'true'
+                rule_source['invert'] = true
+              else
+                rule_source['invert'] = rule.attributes["invert"].nil? ? nil : false
+              end
+              rule_source.delete_if { |key,value| key == 'invert' and value == nil} 
+
             end
             if rule.name == 'destination'
-              rule_destination << rule.attributes["address"]
+              rule_destination['address'] = rule.attributes["address"]
+              if rule.attributes["invert"] == 'true'
+                rule_destination['invert'] = true
+              else
+                rule_destination['invert'] = rule.attributes["invert"].nil? ? nil : false
+              end
+              rule_destination.delete_if { |key,value| key == 'invert' and value == nil}
             end
             if rule.name == 'service'
-              rule_service << rule.attributes["name"]
+              rule_service = rule.attributes["name"]
             end
             if rule.name == 'port'
-              rule_ports << {
-                'port' => rule.attributes["port"].nil? ? nil : rule.attributes["port"],
-                'protocol' => rule.attributes["protocol"].nil? ? nil : rule.attributes["protocol"],
-              }
+              rule_ports['portid'] = rule.attributes["port"].nil? ? nil : rule.attributes["port"]
+              rule_ports['protocol'] = rule.attributes["protocol"].nil? ? nil : rule.attributes["protocol"]
             end
             if rule.name == 'protocol'
-              rule_protocol << rule.attributes["value"]
+              rule_protocol = rule.attributes["value"]
             end
             if rule.name == 'icmp-block'
-              rule_icmp_blocks << rule.attributes["name"]
+              rule_icmp_blocks = rule.attributes["name"]
             end
             if rule.name == 'masquerade'
-              rule_masquerade << rule.text.to_s.strip
+              rule_masquerade = true
             end
             if rule.name == 'forward-port'
-              rule_forward_ports << {
-                'port' => rule.attributes["port"].nil? ? nil : rule.attributes["port"],
-                'protocol' => rule.attributes["protocol"].nil? ? nil : rule.attributes["protocol"],
-                'to-port' => rule.attributes["to-port"].nil? ? nil : rule.attributes["to-port"],
-                'to-addr' => rule.attributes["to-addr"].nil? ? nil : rule.attributes["to-addr"],
-              }
+              rule_forward_ports['portid'] = rule.attributes["port"].nil? ? nil : rule.attributes["port"]
+              rule_forward_ports['protocol'] = rule.attributes["protocol"].nil? ? nil : rule.attributes["protocol"]
+              rule_forward_ports['to_port'] = rule.attributes["to-port"].nil? ? nil : rule.attributes["to-port"]
+              rule_forward_ports['to_addr'] = rule.attributes["to-addr"].nil? ? nil : rule.attributes["to-addr"]
             end
             if rule.name == 'log'
               begin
@@ -320,17 +326,12 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
               rescue
                 limit = nil
               end
-              rule_log << {
-                'prefix' => rule.attributes["prefix"].nil? ? nil : rule.attributes["prefix"],
-                'level' => rule.attributes["level"].nil? ? nil : rule.attributes["level"],
-                'level' => rule.attributes["level"].nil? ? nil : rule.attributes["level"],
-                'limit' => limit,
-              }
+              rule_log['prefix'] = rule.attributes["prefix"].nil? ? nil : rule.attributes["prefix"]
+              rule_log['level'] = rule.attributes["level"].nil? ? nil : rule.attributes["level"]
+              rule_log['limit'] = limit
             end
             if rule.name == 'audit'
-              rule_audit << {
-                 'limit'  => rule.elements["limit"].attributes["value"].nil? ? nil : rule.elements["limit"].attributes["value"],
-              }
+              rule_audit ['limit'] = rule.elements["limit"].attributes["value"].nil? ? nil : rule.elements["limit"].attributes["value"]
             end
             if rule.name == 'accept'
               begin
@@ -338,11 +339,9 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
               rescue
                 limit = nil
               end
-              rule_action << {
-                'action_type' => rule.name,
-                'reject_type' => nil,
-                'limit' => limit,
-              }
+              rule_action['action_type'] = rule.name
+              rule_action['reject_type'] = nil
+              rule_action['limit'] = limit
             end
             if rule.name == 'reject'
               begin
@@ -350,11 +349,9 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
               rescue
                 limit = nil
               end
-              rule_action << {
-                'action_type' => rule.name,
-                'reject_type' => rule.attributes["type"].nil? ? nil : rule.attributes["type"],
-                'limit'  => limit,
-              }
+              rule_action['action_type'] = rule.name
+              rule_action['reject_type'] = rule.attributes["type"].nil? ? nil : rule.attributes["type"]
+              rule_action['limit']  = limit
             end
             if rule.name == 'drop'
               begin
@@ -362,29 +359,45 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
               rescue
                 limit = nil
               end
-              rule_action << {
-                'action_type' => rule.name,
-                'reject_type' => nil,
-                'limit'  => limit,
-              }
+              rule_action['action_type'] = rule.name
+              rule_action['reject_type'] = nil
+              rule_action['limit']  = limit
+            end
+            if rule.name == 'family'
+              rule_family = rule.attributes["type"].nil? ? nil : rule.attributes["family"]
             end
           end
           rich_rules << {
-            :sources       => rule_source.empty? ? nil : rule_source,
-            :destination   => rule_destination.empty? ? nil : rule_destination,
-            :services      => rule_service.empty? ? nil : rule_service,
-            :ports         => rule_ports.empty? ? nil : rule_ports,
-            :protocol      => rule_protocol.empty? ? nil : rule_protocol,
-            :icmp_blocks   => rule_icmp_blocks.empty? ? nil : rule_icmp_blocks,
-            :masquerade    => rule_masquerade.nil? ? nil : rule_masquerade,
-            :forward_ports => rule_forward_ports.empty? ? nil : rule_forward_ports,
-            :log           => rule_log.empty? ? nil : rule_log,
-            :audit         => rule_audit.empty? ? nil : rule_audit,
-            :action        => rule_action.empty? ? nil : rule_action,
+            'source'        => rule_source.empty? ? nil : rule_source,
+            'destination'   => rule_destination.empty? ? nil : rule_destination,
+            'service'      => rule_service.empty? ? nil : rule_service,
+            'port'          => rule_ports.empty? ? nil : rule_ports,
+            'protocol'      => rule_protocol.empty? ? nil : rule_protocol,
+            'icmp_block'   => rule_icmp_blocks.empty? ? nil : rule_icmp_blocks,
+            'masquerade'    => rule_masquerade.nil? ? nil : rule_masquerade,
+            'forward_port' => rule_forward_ports.empty? ? nil : rule_forward_ports,
+            'log'         => rule_log.empty? ? nil : rule_log,
+            'audit'         => rule_audit.empty? ? nil : rule_audit,
+            'action'        => rule_action.empty? ? nil : rule_action,
+            'family'        => rule_family.empty? ? nil : rule_family,
            }
 
+           # remove services if not set so the data type matches the data type returned by the puppet resource.
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'service' and value == nil} } 
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'forward_port' and value == nil} }
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'protocol' and value == nil} }
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'icmp_block' and value == nil} }
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'masquerade' and value == false} }
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'port' and value == nil} }
         end
 
+      end
+
+      # convert the masquerade variable from boolean to array so the data type matches the data type returned by the puppet resource.
+      if masquerade
+        masquerade = ["true"]
+      else
+        masquerade = ["false"]
       end
 
       # Add hash to the zone array
