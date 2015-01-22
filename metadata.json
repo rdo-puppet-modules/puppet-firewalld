@@ -5,7 +5,7 @@
   "summary": "Puppet Module for Firewalld",
   "license": "GPLv2+",
   "source": "https://github.com/jpopelka/puppet-firewalld.git",
-  "project_page": "(https://forge.puppetlabs.com/jpopelka/firewalld)",
+  "project_page": "https://github.com/jpopelka/puppet-firewalld",
   "issues_url": "https://github.com/jpopelka/puppet-firewalld/issues",
   "operatingsystem_support": [
   
