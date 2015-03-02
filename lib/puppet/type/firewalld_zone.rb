@@ -70,6 +70,7 @@ Puppet::Type.newtype(:firewalld_zone) do
       doesn't match any rule (port, service, etc.).
       Default (when target is not specified) is reject.
     EOT
+    newvalues('ACCEPT', '%%REJECT%%', 'DROP')
   end
 
   newparam(:short) do
