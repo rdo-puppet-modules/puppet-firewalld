@@ -9,7 +9,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
     commands :firewall => 'firewall-cmd'
 
     mk_resource_methods
- 
+
     def flush
         Puppet.debug "firewalld zone provider: flushing (#{@resource[:name]})"
 	write_zonefile
@@ -79,8 +79,10 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
           end
         end
 
-        if @resource[:masquerade].at(0).to_s == 'true'
+        if @resource[:masquerade]
+          if @resource[:masquerade].at(0).to_s == 'true'
             zone.add_element 'masquerade'
+          end
         end
 
         if @resource[:forward_ports]
@@ -221,6 +223,10 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
 
       # Set zone level variables
       root = doc.root
+      # Go to next file if there is not a doc.root
+      if ! root
+        next
+      end
       target = root.attributes["target"]
       version = root.attributes["version"]
 
@@ -286,7 +292,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
               else
                 rule_source['invert'] = rule.attributes["invert"].nil? ? nil : false
               end
-              rule_source.delete_if { |key,value| key == 'invert' and value == nil} 
+              rule_source.delete_if { |key,value| key == 'invert' and value == nil}
 
             end
             if rule.name == 'destination'
@@ -383,7 +389,7 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
            }
 
            # remove services if not set so the data type matches the data type returned by the puppet resource.
-           rich_rules.each { |a| a.delete_if { |key,value| key == 'service' and value == nil} } 
+           rich_rules.each { |a| a.delete_if { |key,value| key == 'service' and value == nil} }
            rich_rules.each { |a| a.delete_if { |key,value| key == 'forward_port' and value == nil} }
            rich_rules.each { |a| a.delete_if { |key,value| key == 'protocol' and value == nil} }
            rich_rules.each { |a| a.delete_if { |key,value| key == 'icmp_block' and value == nil} }
@@ -420,14 +426,14 @@ Puppet::Type.type(:firewalld_zone).provide :zoneprovider, :parent => Puppet::Pro
     end
     zone
   end
- 
+
     def destroy
         path = '/etc/firewalld/zones' + @resource[:name] + '.xml'
         File.delete(path)
         Puppet.debug "firewalld zone provider: removing (#{path})"
         @property_hash.clear
     end
- 
+
     def exists?
         @property_hash[:ensure] == :present || false
     end
