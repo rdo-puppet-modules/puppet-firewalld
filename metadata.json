@@ -8,7 +8,35 @@
   "project_page": "https://github.com/jpopelka/puppet-firewalld",
   "issues_url": "https://github.com/jpopelka/puppet-firewalld/issues",
   "operatingsystem_support": [
-  
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Fedora",
+      "operatingsystemrelease": [
+        "20",
+        "21",
+      ]
+    },
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": "3.x"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
   ],
   "dependencies": [
   

@@ -76,18 +76,19 @@
 #		args     => "-p tcp -m tcp --dport 123 -j MARK --set-mark 1",},],}
 #
 class firewalld::direct(
-	$chains = [],
-	$rules = [],
-	$passthroughs = [],
+  $chains = [],
+  $rules = [],
+  $passthroughs = [],
 ) {
-	include firewalld::configuration
+  include firewalld::configuration
 
-	file { '/etc/firewalld/direct.xml':
-		content	=> template('firewalld/direct.xml.erb'),
-		owner	=> root,
-		group	=> root,
-		mode	=> '0644',
-		require	=> Package['firewalld'],
-		notify	=> Service['firewalld'],
-	}
+  file {
+  '/etc/firewalld/direct.xml':
+    content => template('firewalld/direct.xml.erb'),
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    require => Package['firewalld'],
+    notify  => Service['firewalld'],
+  }
 }
