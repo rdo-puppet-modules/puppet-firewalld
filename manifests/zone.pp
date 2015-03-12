@@ -15,27 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-# == Class: firewalld::zone::base
-#
-# This class ensures that /etc/firewalld/zones/ exists.
-# It is used in firewalld::zone and doesn't need to be used on its own.
-#
-class firewalld::zone::base (
-  $purge_zones = 'true'
-) {
-  file { '/etc/firewalld/zones/':
-    ensure  => directory,    # make sure this is a directory
-    recurse => true,         # recursively manage directory
-    purge   => $purge_zones, # purge all unmanaged files, unless overridden in ENC (i.e. Foreman)
-    force   => true,         # also purge subdirs and links
-    owner   => root,
-    group   => root,
-    mode    => '0750',
-    require => Package['firewalld'],
-    notify  => Service['firewalld'],
-  }
-}
-
 # == Define: firewalld::zone
 #
 # This defines a zone configuration.
@@ -154,21 +133,21 @@ define firewalld::zone(
   include firewalld::zone::base
   include firewalld::configuration
 
-  firewalld_zone { "$name":
-    target         => $target,
-    short          => $short,
-    description    => $description,
-    interfaces     => $interfaces,
-    sources        => $sources,
-    ports          => $ports,
-    services       => $services,
-    icmp_blocks    => $icmp_blocks,
-    masquerade     => $masquerade,
+  firewalld_zone { $name:
+    target        => $target,
+    short         => $short,
+    description   => $description,
+    interfaces    => $interfaces,
+    sources       => $sources,
+    ports         => $ports,
+    services      => $services,
+    icmp_blocks   => $icmp_blocks,
+    masquerade    => $masquerade,
     forward_ports => $forward_ports,
     rich_rules    => $rich_rules,
   }
   #Ensure the zone file is present and not destroyed if purge_zones is set to true
-  file { "/etc/firewalld/zones/$name.xml":
+  file { "/etc/firewalld/zones/${name}.xml":
     ensure  => present
   }
 }

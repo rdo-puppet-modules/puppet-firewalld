@@ -46,22 +46,23 @@
 #	users             => [{username => 'me'},],}
 #
 class firewalld::lockdown_whitelist(
-	$selinux_contexts = [],
-	$commands = [],
-	$users = [],
+  $selinux_contexts = [],
+  $commands = [],
+  $users = [],
 ) {
-	include firewalld::configuration
+  include firewalld::configuration
 
-	if "${users}" != [] {
-		# TODO: assert there's one (and only one of) {username, userid}
-	}
+  if $users != [] {
+    # TODO: assert there's one (and only one of) {username, userid}
+  }
 
-	file { '/etc/firewalld/lockdown-whitelist.xml':
-		content	=> template('firewalld/lockdown-whitelist.xml.erb'),
-		owner	=> root,
-		group	=> root,
-		mode	=> '0644',
-		require	=> Package['firewalld'],
-		notify	=> Service['firewalld'],
-	}
+  file {
+    '/etc/firewalld/lockdown-whitelist.xml':
+      content => template('firewalld/lockdown-whitelist.xml.erb'),
+      owner   => root,
+      group   => root,
+      mode    => '0644',
+      require => Package['firewalld'],
+      notify  => Service['firewalld'],
+  }
 }

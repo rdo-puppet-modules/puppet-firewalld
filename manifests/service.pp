@@ -15,25 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-# == Class: firewalld::service::base
-#
-# This class ensures that /etc/firewalld/services/ exists.
-# It is used in firewalld::service and doesn't need to be used on its own.
-#
-class firewalld::service::base {
-
-	#include firewalld
-
-	file { '/etc/firewalld/services/':
-		ensure	=> directory,		# make sure this is a directory
-		owner	=> root,
-		group	=> root,
-		mode	=> '0750',
-		require	=> Package['firewalld'],
-		notify	=> Service['firewalld'],
-	}
-}
-
 # == Define: firewalld::service
 #
 # This defines a service configuration.
@@ -67,22 +48,22 @@ class firewalld::service::base {
 #	destination	=> {ipv4 => '224.0.0.251', ipv6 => 'ff02::fb'},}
 #
 define firewalld::service(
-	$short = '',
-	$description = '',
-	$ports = [],
-	$modules = [],
-	$destination = {},
+  $short = '',
+  $description = '',
+  $ports = [],
+  $modules = [],
+  $destination = {},
 ) {
 
-	include firewalld::service::base
-	include firewalld::configuration
+  include firewalld::service::base
+  include firewalld::configuration
 
-	file { "/etc/firewalld/services/${name}.xml":
-		content	=> template('firewalld/service.xml.erb'),
-		owner	=> root,
-		group	=> root,
-		mode	=> '0644',
-		require	=> Package['firewalld'],
-		notify	=> Service['firewalld'],
-	}
+  file { "/etc/firewalld/services/${name}.xml":
+    content => template('firewalld/service.xml.erb'),
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    require => Package['firewalld'],
+    notify  => Service['firewalld'],
+  }
 }
