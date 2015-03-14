@@ -24,9 +24,9 @@
       "operatingsystem": "Fedora",
       "operatingsystemrelease": [
         "20",
-        "21",
+        "21"
       ]
-    },
+    }
   ],
   "requirements": [
     {
