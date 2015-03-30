@@ -48,5 +48,13 @@ class firewalld {
       Service['iptables', 'ip6tables'],  # ensure it's stopped
     ],
   }
+
+  exec{ 'firewalld::reload':
+    path        =>'/usr/bin:/bin',
+    command     => 'firewall-cmd --complete-reload',
+    refreshonly => true,
+  }
+
   Service['firewalld'] -> Firewalld_zone<||>
+
 }
