@@ -48,6 +48,7 @@ define firewalld::rich_rule(
     ensure     => $ensure,
     zone       => $zone,
     rich_rules => $rich_rules,
-    notify     => Service['firewalld']
+    notify     => Exec['firewalld::reload'],
+    require    => Firewalld_zone[$zone],
   }
 }
