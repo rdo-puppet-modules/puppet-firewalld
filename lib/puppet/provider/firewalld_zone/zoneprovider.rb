@@ -1,5 +1,5 @@
 require 'puppet'
-require 'puppet/provider/firewalld'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'firewalld'))
 require 'rexml/document'
 include REXML
 
