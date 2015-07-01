@@ -38,7 +38,7 @@
 #   If set to 'yes', firewall changes with the D-Bus interface will be
 #   limited to applications that are listed in the lockdown whitelist.
 #   Default is 'no'
-# [*IPv6_rpfilter*]
+# [*ipv6_rpfilter*]
 #   Performs a reverse path filter test on a packet for IPv6. If a reply to
 #   the packet would be sent via the same interface that the packet arrived on,
 #   the packet will match and be accepted, otherwise dropped. Default is 'yes'.
@@ -53,7 +53,7 @@ class firewalld::configuration (
   $minimal_mark = '100',
   $cleanup_on_exit = 'yes',
   $lockdown = 'no',
-  $IPv6_rpfilter = 'yes',
+  $ipv6_rpfilter = 'yes',
 ) {
 
   include firewalld
